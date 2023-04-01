@@ -16,7 +16,7 @@ const Home: NextPage = () => {
 
   const lyricsRef = useRef<null | HTMLDivElement>(null);
 
-  const scrollToBios = () => {
+  const scrollToLyrics = () => {
     if (lyricsRef.current !== null) {
       lyricsRef.current.scrollIntoView({ behavior: "smooth" });
     }
@@ -26,7 +26,7 @@ const Home: NextPage = () => {
     ? songs.filter((song) => song.title === selectedSong)
     : null;
 
-  const generateBio = async (e: any) => {
+  const generateLyrics = async (e: any) => {
     e.preventDefault();
     setGeneratedLyrics("");
     setLoading(true);
@@ -52,15 +52,15 @@ const Home: NextPage = () => {
 
     const reader = data.getReader();
     const decoder = new TextDecoder();
-    let done = false;
 
+    let done = false;
     while (!done) {
       const { value, done: doneReading } = await reader.read();
       done = doneReading;
       const chunkValue = decoder.decode(value);
       setGeneratedLyrics((prev) => prev + chunkValue);
     }
-    scrollToBios();
+    scrollToLyrics();
     setLoading(false);
   };
 
@@ -69,6 +69,10 @@ const Home: NextPage = () => {
       <Head>
         <title>AI Bad Bunny Lyrics Generator</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
+        />
       </Head>
 
       <main className="flex flex-1 w-full flex-col items-center text-center px-4 mt-10">
@@ -82,7 +86,7 @@ const Home: NextPage = () => {
           <textarea
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            rows={2}
+            rows={1}
             className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black mt-2 mb-5"
             placeholder={"los angeles, web development, scorpios"}
             required
@@ -103,7 +107,7 @@ const Home: NextPage = () => {
             <>
               <button
                 className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
-                onClick={(e) => generateBio(e)}
+                onClick={(e) => generateLyrics(e)}
                 disabled={!topic ? true : false}
               >
                 Generate lyrics &rarr;
@@ -131,19 +135,21 @@ const Home: NextPage = () => {
           toastOptions={{ duration: 2000 }}
         />
         <hr className="h-px bg-gray-700 border-1 dark:bg-gray-700" />
-        {generatedLyrics && (
-          <div className="my-10 max-w-xl w-full">
-            <h2
-              className="sm:text-4xl text-3xl font-bold text-slate-900 mx-auto mb-5"
-              ref={lyricsRef}
-            >
-              El Bot Bunny Lyrics:
-            </h2>
-            <div className="text-left">
-              <p className="whitespace-pre-line">{generatedLyrics}</p>
-            </div>
-          </div>
-        )}
+        <div className="my-10 max-w-xl w-full">
+          {generatedLyrics && (
+            <>
+              <h2
+                className="sm:text-4xl text-3xl font-bold text-slate-900 mx-auto mb-5"
+                ref={lyricsRef}
+              >
+                El Bot Bunny Lyrics:
+              </h2>
+              <div className="text-left">
+                <p className="whitespace-pre-line">{generatedLyrics}</p>
+              </div>
+            </>
+          )}
+        </div>
       </main>
       <Footer />
     </div>
