@@ -72,6 +72,23 @@ const Home: NextPage = () => {
     }
   }, [generatedLyrics]);
 
+  async function onShare() {
+    const response = await fetch("/api/shareimage");
+    const blob = await response.blob();
+    const filesArray: File[] = [
+      new File([blob], "meme.jpg", {
+        type: "image/jpeg",
+        lastModified: new Date().getTime(),
+      }),
+    ];
+    const shareData = {
+      files: filesArray,
+    };
+    navigator.share(shareData as any).then(() => {
+      console.log("Shared successfully");
+    });
+  }
+
   return (
     <div className="flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
       <Head>
@@ -87,6 +104,12 @@ const Home: NextPage = () => {
         <h1 className="sm:text-6xl text-4xl max-w-[708px] font-bold text-slate-900">
           Generate Bad Bunny lyrics powered by AI
         </h1>
+        <button
+          className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
+          onClick={onShare}
+        >
+          Share!
+        </button>
         <div className="max-w-xl w-full">
           {!hideInput && (
             <>
