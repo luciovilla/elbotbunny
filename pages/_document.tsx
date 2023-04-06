@@ -15,7 +15,7 @@ class MyDocument extends Document {
           />
           <meta property="og:url" content="https://elbotbunny.com/" />
           <meta property="og:site_name" content="El Bot Bunny" />
-          <meta property="og:image" content="https://elbotbunny.com/site.png" />
+          <meta property="og:image" content="https://elbotbunny.com/og.png" />
           <meta property="og:type" content="website" />
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="El Bot Bunny" />
@@ -24,10 +24,7 @@ class MyDocument extends Document {
             name="twitter:description"
             content="AI Bad Bunny lyrics generator"
           />
-          <meta
-            name="twitter:image"
-            content="https://elbotbunny.com/site.png"
-          />
+          <meta name="twitter:image" content="https://elbotbunny.com/og.png" />
         </Head>
         <body>
           <Main />
