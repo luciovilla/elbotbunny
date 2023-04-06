@@ -119,9 +119,12 @@ const Home: NextPage = () => {
         </Head>
 
         <main className="flex flex-1 w-full flex-col items-center text-center px-4 mt-10">
-          <h1 className="sm:text-6xl text-4xl max-w-[708px] font-bold text-slate-900">
-            Generate Bad Bunny lyrics powered by AI
+          <h1 className="sm:text-7xl text-5xl mb-1 font-bold text-slate-900">
+            El Bot Bunny
           </h1>
+          <h2 className="sm:text-2xl text-lg text-slate-900">
+            Generate Bad Bunny lyrics powered by AI
+          </h2>
           <div className="max-w-xl w-full">
             {!hideInput && (
               <>
