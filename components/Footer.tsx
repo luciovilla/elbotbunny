@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="text-center text-xs h-12  w-full sm:pt-2 pt-4 border-t mt-5 flex sm:flex-row flex-col justify-between items-center px-3 space-y-3 sm:mb-0 mb-3">
+    <footer className="text-center text-xs w-full sm:py-4 py-2 border-t mt-5 flex flex-row justify-between items-center px-3 sm:mb-0">
       <div>
         Powered by{" "}
         <a
@@ -23,7 +23,7 @@ export default function Footer() {
           Genius API
         </a>
       </div>
-      <div className="flex space-x-4 pb-4 sm:pb-0">
+      <div className="flex">
         <Link
           href="https://twitter.com/luciovilla"
           className="group"
