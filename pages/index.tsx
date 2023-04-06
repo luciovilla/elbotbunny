@@ -72,125 +72,168 @@ const Home: NextPage = () => {
     }
   }, [generatedLyrics]);
 
+  async function onShare() {
+    const response = await fetch(
+      `/api/shareimage?lyrics=${encodeURI(generatedLyrics)}&topics=${topic}`
+    );
+    const imageBlob = await response.blob();
+
+    if (!navigator.share) {
+      navigator.clipboard.write([
+        new ClipboardItem({
+          ["image/png"]: imageBlob,
+        }),
+      ]);
+      toast("Image copied to clipboard", {
+        icon: "✂️",
+      });
+    } else {
+      const filesArray: File[] = [
+        new File([imageBlob], "elbotbunny-lyrics.png", {
+          type: "image/png",
+          lastModified: new Date().getTime(),
+        }),
+      ];
+      const shareData = {
+        files: filesArray,
+      };
+      navigator.share(shareData);
+    }
+  }
+
   return (
-    <div className="flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
-      <Head>
-        <title>AI Bad Bunny Lyrics Generator</title>
-        <link rel="icon" href="/favicon.ico" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
-        />
-      </Head>
+    <div
+      style={{
+        backgroundImage:
+          "linear-gradient(to bottom, #c8ebff, #ffe1de, #faf7de)",
+      }}
+    >
+      <div className="flex max-w-5xl mx-auto flex-col items-center justify-center pt-10 sm:pt-5 min-h-screen">
+        <Head>
+          <title>AI Bad Bunny Lyrics Generator</title>
+          <link rel="icon" href="/favicon.ico" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
+          />
+        </Head>
 
-      <main className="flex flex-1 w-full flex-col items-center text-center px-4 mt-10">
-        <h1 className="sm:text-6xl text-4xl max-w-[708px] font-bold text-slate-900">
-          Generate Bad Bunny lyrics powered by AI
-        </h1>
-        <div className="max-w-xl w-full">
-          {!hideInput && (
-            <>
-              <div className="flex mt-10 items-center space-x-3">
-                <p className="text-left font-medium">Topics:</p>
-              </div>
-              <textarea
-                value={topic}
-                rows={1}
-                spellCheck={false}
-                onChange={(e) => setTopic(e.target.value)}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black mt-2 mb-5"
-                placeholder={"los angeles, web development, scorpios"}
-                required
-              />
-              <div className="flex mb-2 items-center space-x-3">
-                <p className="text-left font-medium">
-                  (Optional) Based on this song:
-                </p>
-              </div>
-              <div className="block">
-                <DropDown
-                  song={selectedSong}
-                  setSong={(newSong) => setSelectedSong(newSong)}
+        <main className="flex flex-1 w-full flex-col items-center text-center px-4 mt-10">
+          <h1 className="sm:text-6xl text-4xl max-w-[708px] font-bold text-slate-900">
+            Generate Bad Bunny lyrics powered by AI
+          </h1>
+          <div className="max-w-xl w-full">
+            {!hideInput && (
+              <>
+                <div className="flex mt-10 items-center space-x-3">
+                  <p className="text-left font-medium">Topics:</p>
+                </div>
+                <input
+                  value={topic}
+                  spellCheck={false}
+                  onChange={(e) => setTopic(e.target.value)}
+                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black mt-2 mb-5 p-2"
+                  placeholder={"los angeles, web development, scorpios"}
+                  required
                 />
-              </div>
-            </>
-          )}
+                <div className="flex mb-2 items-center space-x-3">
+                  <p className="text-left font-medium">
+                    (Optional) Based on this song:
+                  </p>
+                </div>
+                <div className="block">
+                  <DropDown
+                    song={selectedSong}
+                    setSong={(newSong) => setSelectedSong(newSong)}
+                  />
+                </div>
+              </>
+            )}
 
-          {!loading && !hideInput && (
-            <>
-              <button
-                className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
-                onClick={(e) => generateLyrics(e)}
-                disabled={!topic ? true : false}
-              >
-                Generate lyrics &rarr;
-              </button>
-              {!topic && (
-                <span className="text-xs text-red-600 font-bold">
-                  *Type in a topic or few above
-                </span>
-              )}
-            </>
-          )}
-          {loading && (
-            <button
-              className="bg-black rounded-xl text-white px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
-              disabled
-            >
-              Auto perreo in progress{" "}
-              <LoadingDots color="white" style="large" />
-            </button>
-          )}
-          {!loading && hideInput && (
-            <>
-              <button
-                className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
-                onClick={resetLyrics}
-              >
-                Generate new lyrics &rarr;
-              </button>
-            </>
-          )}
-        </div>
-        <Toaster
-          position="top-center"
-          reverseOrder={false}
-          toastOptions={{ duration: 2000 }}
-        />
-        <hr className="h-px bg-gray-700 border-1 dark:bg-gray-700" />
-        <div className="my-10 max-w-xl w-full">
-          {generatedLyrics && (
-            <>
-              <h2 className="sm:text-4xl text-3xl font-bold text-slate-900 mx-auto mb-5">
-                El Bot Bunny lyrics:
-              </h2>
-              <div className="text-left">
-                <textarea
-                  value={generatedLyrics}
-                  rows={15}
-                  ref={textAreaRef}
-                  readOnly
-                  className="whitespace-pre-line w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black mt-2 mb-5"
-                />
-              </div>
-              {!loading && (
+            {!loading && !hideInput && (
+              <>
                 <button
-                  className="bg-black rounded-xl text-white font-medium px-4 py-2 hover:bg-black/80"
-                  onClick={() => {
-                    navigator.clipboard.writeText(generatedLyrics);
-                    toast("Lyrics copied to clipboard", {
-                      icon: "✂️",
-                    });
-                  }}
+                  className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
+                  onClick={(e) => generateLyrics(e)}
+                  disabled={!topic ? true : false}
                 >
-                  Copy lyrics
+                  Generate lyrics &rarr;
                 </button>
-              )}
-            </>
-          )}
-        </div>
-      </main>
-      <Footer />
+                {!topic && (
+                  <span className="text-xs text-red-600 font-bold">
+                    *Type in a topic or few above
+                  </span>
+                )}
+              </>
+            )}
+            {loading && (
+              <button
+                className="bg-black rounded-xl text-white px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
+                disabled
+              >
+                Auto perreo in progress{" "}
+                <LoadingDots color="white" style="large" />
+              </button>
+            )}
+            {!loading && hideInput && (
+              <>
+                <button
+                  className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
+                  onClick={resetLyrics}
+                >
+                  Generate new lyrics &rarr;
+                </button>
+              </>
+            )}
+          </div>
+          <Toaster
+            position="top-center"
+            reverseOrder={false}
+            toastOptions={{ duration: 2000 }}
+          />
+          <hr className="h-px bg-gray-700 border-1 dark:bg-gray-700" />
+          <div className="my-10 max-w-xl w-full">
+            {generatedLyrics && (
+              <>
+                <h2 className="sm:text-4xl text-3xl font-bold text-slate-900 mx-auto mb-5">
+                  El Bot Bunny lyrics:
+                </h2>
+                <div className="text-left">
+                  <textarea
+                    value={generatedLyrics}
+                    rows={15}
+                    ref={textAreaRef}
+                    readOnly
+                    className="whitespace-pre-line w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black mt-2 mb-5"
+                  />
+                </div>
+                {!loading && (
+                  <div className="space-x-5">
+                    <button
+                      className="bg-black rounded-xl text-white font-medium px-4 py-2 hover:bg-black/80"
+                      onClick={() => {
+                        navigator.clipboard.writeText(generatedLyrics);
+                        toast("Lyrics copied to clipboard", {
+                          icon: "✂️",
+                        });
+                      }}
+                    >
+                      Copy lyrics
+                    </button>
+                    <button
+                      className="bg-black rounded-xl text-white font-medium px-4 py-2 hover:bg-black/80"
+                      onClick={onShare}
+                    >
+                      Share Lyrics
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 };
