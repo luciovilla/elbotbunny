@@ -12,15 +12,6 @@ export default function Footer() {
           className="font-bold hover:underline transition underline-offset-2"
         >
           ChatGPT
-        </a>{" "}
-        and{" "}
-        <a
-          href="https://docs.genius.com"
-          target="_blank"
-          rel="noreferrer"
-          className="font-bold hover:underline transition underline-offset-2"
-        >
-          Genius API
         </a>
       </div>
       <div className="flex">
