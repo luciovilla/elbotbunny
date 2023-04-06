@@ -110,7 +110,7 @@ const Home: NextPage = () => {
     >
       <div className="flex max-w-5xl mx-auto flex-col items-center justify-center pt-10 sm:pt-5 min-h-screen">
         <Head>
-          <title>AI Bad Bunny Lyrics Generator</title>
+          <title>El Bot Bunny - AI Bad Bunny Lyrics Generator</title>
           <link rel="icon" href="/favicon.ico" />
           <meta
             name="viewport"
