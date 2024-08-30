@@ -1,4 +1,4 @@
-import { CreateChatCompletionRequest } from "openai";
+import OpenAI from "openai";
 
 import { OpenAIStream } from "../../utils/OpenAIStream";
 import { generatePrompt, SongType } from "../../utils/prompt";
@@ -29,7 +29,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   const prompt = generatePrompt(topic, song);
 
-  const payload: CreateChatCompletionRequest = {
+  const payload: OpenAI.Chat.ChatCompletionCreateParamsStreaming = {
     model: "gpt-3.5-turbo",
     messages: [{ role: "user", content: prompt }],
     temperature: 0.7,

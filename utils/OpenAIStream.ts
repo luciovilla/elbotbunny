@@ -1,4 +1,4 @@
-import { CreateChatCompletionRequest } from "openai";
+import OpenAI from "openai";
 import {
   createParser,
   ParsedEvent,
@@ -12,7 +12,9 @@ export interface ChatGPTMessage {
   content: string;
 }
 
-export async function OpenAIStream(payload: CreateChatCompletionRequest) {
+export async function OpenAIStream(
+  payload: OpenAI.Chat.ChatCompletionCreateParamsStreaming
+) {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
